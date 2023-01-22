@@ -37,11 +37,8 @@ import dev.failsafe.internal.util.Assert;
 
 class Ally {
 
-
 	private static WebDriver webDriver;
 	private static String baseUrl;
-	
-	
 	
 	
 	@BeforeAll
@@ -58,11 +55,11 @@ class Ally {
 
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
-		//webDriver.quit();
+		webDriver.quit();
 	}
 	
 	@Test
-	void singUpWithInvalidInput() throws InterruptedException, UnsupportedFlavorException, IOException {
+	void testAccessibility(){
 		webDriver.get(baseUrl);
 			
 	

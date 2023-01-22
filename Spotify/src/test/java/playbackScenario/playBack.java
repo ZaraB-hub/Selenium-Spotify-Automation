@@ -44,7 +44,6 @@ class playBack {
 		Thread.sleep(5000);
 				
 		//pick Playlist
-		
 		WebElement playlistElement=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div/div/section[1]/div[2]/div/div/div[3]"));
 		playlistElement.click();
 		Thread.sleep(3000);
@@ -52,7 +51,7 @@ class playBack {
 		//play
 		WebElement playMusic= webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[2]/div[2]/div[4]/div/div/div/div/div/button"));
 		playMusic.click();
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 		String song1=webDriver.getTitle();
 		assertTrue(playMusic.getAttribute("aria-label").toLowerCase().contains("pause"));
 		

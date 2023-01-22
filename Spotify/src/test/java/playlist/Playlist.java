@@ -14,7 +14,10 @@ import javax.swing.JScrollBar;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -26,10 +29,13 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+
+@TestMethodOrder(OrderAnnotation.class)
 class Playlist {
 
 	private static WebDriver webDriver;
 	private static String baseUrl;
+	private static Actions actions;
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -40,30 +46,36 @@ class Playlist {
 		options.addArguments("--user-data-dir=\\Users\\zarab\\AppData\\Local\\Google\\Chrome\\User Data");
 		webDriver=new ChromeDriver(options);
 		baseUrl="https://www.spotify.com";
+		actions=new Actions(webDriver);
 		
 	}
 
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
-		//webDriver.quit();
+		webDriver.quit();
 	}
 	
 	@Test
-	void singUpWithInvalidInput() throws InterruptedException, UnsupportedFlavorException, IOException {
+	@Order(1)
+	void createPlaylistTest() throws InterruptedException{
 		webDriver.get(baseUrl);
 		Thread.sleep(5000);
 	
 		//go to library
 		webDriver.findElement(By.partialLinkText("Library")).click();
 		assertTrue(webDriver.getCurrentUrl().contains("playlist"));
-		
 		Thread.sleep(3000);
+		
 		//create playlist
 		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/section/a")).click();
 		Thread.sleep(4000);
 		assertTrue(webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[1]/div[5]/span/button/span/h1")).getText().contains("My Playlist"));
 		
-		//ADD SONGS 
+	}
+
+	@Test
+	@Order(2)
+	void addSongs() throws InterruptedException{
 		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[2]/div[3]/section/div/div/input")).sendKeys("bts");
 		Thread.sleep(3000);
 		List<WebElement>addsElements=webDriver.findElements(By.cssSelector("[aria-label='Add to Playlist']"));
@@ -71,41 +83,59 @@ class Playlist {
 			addsElements.get(i).click();
 			Thread.sleep(3000);
 		}
-		
-		//DELETE FIRST SONG
+	}
+	
+	@Test
+	@Order(3)
+	void deleteSongs() throws InterruptedException{
 		WebElement firstElement=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[2]/div[3]/div[1]/div[2]/div[2]/div[1]/div"));
 		
-		Actions actions=new Actions(webDriver);
 		actions.moveToElement(firstElement).click().keyDown(Keys.DELETE).perform();
 		
 		Thread.sleep(5000);
+	
+	}
+	
+	@Test
+	@Order(4)
+	void editPlaylistTest() throws InterruptedException{
 		//edit
 		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[1]/div[5]/span/button")).click();
 		Thread.sleep(3000);
 		webDriver.findElement(By.xpath("/html/body/div[17]/div/div/div/div[2]/div[3]/textarea")).sendKeys("Selenium");
 		Thread.sleep(1000);
-		// save
+		// save change
 		webDriver.findElement(By.xpath("/html/body/div[17]/div/div/div/div[2]/div[4]/button")).click();
 		Thread.sleep(3000);
+	}
 		
-		//SHARE
+	@Test
+	@Order(5)
+	void shareTest() throws InterruptedException, UnsupportedFlavorException, IOException{
+		Thread.sleep(2000);
+		//more
 		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[2]/div[2]/div[4]/div/div/div/div/button")).click();
 		Thread.sleep(5000);
-		WebElement share=webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[6]/button"));
+		//share
+		WebElement share=webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[7]/button"));
 		actions.moveToElement(share).perform();
 		Thread.sleep(3000);
-		webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[6]/div/ul/li[1]/button")).click();
+		//copy link
+		Thread.sleep(2000);
+		webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[7]/div/ul/li[1]/button")).click();
 		Thread.sleep(5000);
-		
+		//test link
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		Transferable transferable = clipboard.getContents(null);
 		String clipboardLink = (String) transferable.getTransferData(DataFlavor.stringFlavor);
 		assertTrue( clipboardLink.contains(webDriver.getCurrentUrl()));
-	
-		
+			
 		Thread.sleep(4000);
-		
-		//DELETE PLAYLIST
+		}	
+	
+	@Test
+	@Order(6)
+	void deletePlaylist() throws InterruptedException{
 		WebElement playlist=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/nav/div[1]/div[2]/div/div[4]/div/div[4]/div/div/ul/div/div[2]/div/li/a"));
 		actions.moveToElement(playlist).click().keyDown(Keys.DELETE).perform();
 		
@@ -115,5 +145,28 @@ class Playlist {
 		
 		Thread.sleep(3000);
 		assertTrue(webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/section/h1")).getText().contains("first playlist"));
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 }
-}
+
