@@ -32,31 +32,31 @@ class LoginViaGoogle {
 
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
-		//webDriver.quit();
+		webDriver.quit();
 	}
 	
 	@Test
-	void test() {
+	void test() throws InterruptedException {
 		webDriver.get(baseUrl);
-//		
-//		// cookies:
-//		webDriver.findElement(By.xpath("/html/body/div[13]/div[3]/div/div[2]/button")).click();
 		
 		//login Button
 		webDriver.findElement(By.xpath("/html/body/div[3]/div/div[2]/div[1]/header/div[6]/button[2]/span")).click();
 		webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-		//login page
+		
+			//login page
 		assertTrue(webDriver.findElement(By.id("login-to-continue")).getText().contains("log in"));
 		
 		//signInviaGoogle
 		webDriver.findElement(By.xpath("/html/body/div[1]/div/div[2]/div/div/ul/li[3]/button")).click();
+		Thread.sleep(3000);
+
+		//pick account
+		webDriver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[2]/div")).click();
+		Thread.sleep(5000);
 		
-//		//input email
-//		webDriver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div[1]/div/div[1]/div/div[1]/input")).click();
+		String profileUsername=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[1]/header/button[2]/span")).getText();
+		assertEquals("Zara Bahtanović", profileUsername); // we have been logged in with account credentials
 		
-		webDriver.findElement(By.xpath("/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div/div/ul/li[4]/div/div[1]/div")).click();
-	
-			//	failed not with this method
 	}
 
 }

@@ -53,7 +53,7 @@ class radioTest {
 		Thread.sleep(4000);
 		
 		//go to radio 
-		webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[2]/button")).click();
+		webDriver.findElement(By.xpath("/html/body/div[15]/div/ul/li[1]/button")).click();
 		Thread.sleep(3000);
 		
 		//assert 
@@ -87,7 +87,7 @@ class radioTest {
 	void testRadiofromArtist() throws InterruptedException {
 			
 		//artist name
-		String nameString="john legend";
+		String nameString="selena gomez";
 		
 		webDriver.get(baseUrl);
 		Thread.sleep(3000);
@@ -147,7 +147,7 @@ class radioTest {
 		Thread.sleep(5000);
 		
 		//go to radio 
-		webDriver.findElement(By.xpath("/html/body/div[14]/div/ul/li[2]/button")).click();
+		webDriver.findElement(By.xpath("/html/body/div[14]/div/ul/li[1]/button")).click();
 		Thread.sleep(3000);
 		
 		//assert 

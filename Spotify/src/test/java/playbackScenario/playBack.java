@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.time.Duration;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,13 +44,12 @@ class playBack {
 		webDriver.get(baseUrl);	
 		Thread.sleep(5000);
 				
-		//pick Playlist
-		WebElement playlistElement=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div/div/section[1]/div[2]/div/div/div[3]"));
-		playlistElement.click();
-		Thread.sleep(3000);
+		//navigate to Playlist
+		webDriver.navigate().to("https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M");
 		
 		//play
-		WebElement playMusic= webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/div/section/div[2]/div[2]/div[4]/div/div/div/div/div/button"));
+		webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		WebElement playMusic= webDriver.findElement(By.cssSelector(".Button-sc-qlcn5g-0.futnNt"));
 		playMusic.click();
 		Thread.sleep(3000);
 		String song1=webDriver.getTitle();
@@ -79,7 +79,6 @@ class playBack {
 		Thread.sleep(2000);
 		assertTrue(shuffle.getAttribute("aria-checked").toLowerCase().contains("true"));
 		shuffle.click();
-		Thread.sleep(2000);
 		Thread.sleep(2000);
 		
 		//repeat

@@ -11,9 +11,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
 
 @TestMethodOrder(OrderAnnotation.class)
 class Profile {
@@ -76,6 +78,49 @@ class Profile {
 		String newName=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div/div[1]/div[5]/span/button/span/h1")).getText();
 		assertEquals(newDisplayNameValue,newName);
 		
+		webDriver.quit();
+	}
+	
+	
+	@Test
+	void editAccountSetting() throws InterruptedException{
+	
+		//get spotify
+		webDriver.get(baseUrl);
+		Thread.sleep(3000);
+		
+		//click user
+		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[1]/header/button[2]")).click();
+		Thread.sleep(3000);		
+		
+		String handle1=webDriver.getWindowHandle();
+		//setting
+		webDriver.findElement(By.xpath("/html/body/div[14]/div/div/ul/li[1]/button")).click();
+		for(String handle:webDriver.getWindowHandles()) {
+			if(!handle.equals(handle1)) {
+				webDriver.switchTo().window(handle);
+			}
+		}
+		
+		//click edit profile
+		Thread.sleep(3000);
+		webDriver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/div[3]/div[2]/div/article[1]/div/a")).click();
+		Thread.sleep(2000);
+		
+		//select gender
+		Select genderSelect=new Select(webDriver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/article/section/form/section/div[3]/div[2]/select")));
+		String beforeString=genderSelect.getFirstSelectedOption().getText();
+		genderSelect.selectByVisibleText("Male");
+
+		
+		//confirm
+		Thread.sleep(3000);
+		webDriver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/article/section/form/div/button")).click();
+		
+		//confirm
+		Select genderSelect2=new Select(webDriver.findElement(By.xpath("/html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/article/section/form/section/div[3]/div[2]/select")));
+		String afterString=genderSelect2.getFirstSelectedOption().getText();
+		assertNotEquals(beforeString, afterString);
 	}
 }
 

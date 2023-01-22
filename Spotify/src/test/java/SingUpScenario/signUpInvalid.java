@@ -28,7 +28,7 @@ class signUpInvalid {
 		ChromeOptions options=new ChromeOptions();
 		options.addArguments(" --start-maximized");
 	//	options.addArguments("--headless");
-		options.addArguments("--user-data-dir=\\Users\\zarab\\AppData\\Local\\Google\\Chrome\\User Data");
+	//	options.addArguments("--user-data-dir=\\Users\\zarab\\AppData\\Local\\Google\\Chrome\\User Data");
 		webDriver=new ChromeDriver(options);
 		baseUrl="https://www.spotify.com";
 		
@@ -41,14 +41,24 @@ class signUpInvalid {
 	
 	@Test
 	void singUpWithInvalidInput() throws InterruptedException {
-		//radi ako stavim bey profila moram cookies
-
-		webDriver.get("https://www.spotify.com/ba/signup?forward_url=https%3A%2F%2Fopen.spotify.com%2F%3F");
 		
-		//submit
-		webDriver.findElement(By.xpath("/html/body/div[1]/main/div/div/form/div[9]/div/button/span[1]")).click();
+		webDriver.get(baseUrl);
+		webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+		
+		// cookies:
+		webDriver.findElement(By.xpath("/html/body/div[13]/div[3]/div/div[2]/button")).click();
 		
 		Thread.sleep(2000);
+		//click on the sing up for free button
+		webDriver.findElement(By.xpath("/html/body/div[3]/div/div[2]/div[2]/footer/div[1]/button/span")).click();
+		
+		//wait for page to load
+		Thread.sleep(2000);
+		
+		//submit
+		webDriver.findElement(By.xpath("/html/body/div[1]/main/div/div/form/div[9]/div/button/span[1]")).click();		
+		Thread.sleep(2000);
+		
 		//assert that if i submit with improper input i stay on same page and get error messages
 		assertEquals(webDriver.getCurrentUrl(), "https://www.spotify.com/ba/signup?forward_url=https%3A%2F%2Fopen.spotify.com%2F%3F"); 
 		
@@ -58,7 +68,7 @@ class signUpInvalid {
 			e.isDisplayed();
 			System.out.print(e.getText()); //error messages
 		}
-			
+		assertEquals(9,errors.size()); // assert that for every invalid input there is an error message that goes with it
 
 	}
 

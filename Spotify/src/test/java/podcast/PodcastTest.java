@@ -9,6 +9,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
+import javax.swing.plaf.basic.BasicArrowButton;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
@@ -111,9 +113,36 @@ class PodcastTest {
 		Transferable transferable = clipboard.getContents(null);
 		String clipboardLink = (String) transferable.getTransferData(DataFlavor.stringFlavor);
 		assertTrue( clipboardLink.contains(webDriver.getCurrentUrl()));
-					
-		Thread.sleep(4000);		
+		Thread.sleep(3000);		
 
+	}
+	
+	@Test
+	@Order(4)
+	void episodeFunctionality() throws InterruptedException, UnsupportedFlavorException, IOException {
+
+		//select episode
+		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[4]/div[2]/div[1]")).click();
+		Thread.sleep(2000);
+		String episodeName=webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[1]/div[5]/span/h1/span")).getText();
+		
+		//play
+		webDriver.findElement(By.className("IeLnf2wUHVKqxhzBcBoM")).click();
+		Thread.sleep(3000);
+		
+		//pause
+		webDriver.findElement(By.className("IeLnf2wUHVKqxhzBcBoM")).click();
+		Thread.sleep(3000);
+		
+		//save to library
+		webDriver.findElement(By.xpath("/html/body/div[4]/div/div[2]/div[3]/div[1]/div[2]/div[2]/div/div/div[2]/main/section/div[3]/div[4]/div/div/div/div[2]/button[1]")).click();
+		Thread.sleep(2000);
+	
+		//veryfy that the proper episode has been added
+		webDriver.navigate().to("https://open.spotify.com/collection/episodes");
+		Thread.sleep(3000);
+		String latestAdd=webDriver.findElement(By.partialLinkText(episodeName)).getText();
+		assertEquals(latestAdd.toLowerCase(), episodeName.toLowerCase());
 	}
 
 	
